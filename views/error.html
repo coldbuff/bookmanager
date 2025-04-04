@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="error-container">
+  <div class="error-icon">
+    <i class="fas fa-exclamation-triangle"></i>
+  </div>
+  <h2 class="error-title">오류가 발생했습니다</h2>
+  <p class="error-message">{{ message }}</p>
+  <div class="error-details">
+    {% if error %}
+    <pre>{{ error }}</pre>
+    {% endif %}
+  </div>
+  <div class="error-actions">
+    <a href="/" class="btn primary-btn"><i class="fas fa-home"></i> 홈으로 돌아가기</a>
+    <button class="btn secondary-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i> 이전 페이지로</button>
+  </div>
+</div>
+{% endblock %}

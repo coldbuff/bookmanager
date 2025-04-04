@@ -1,0 +1,65 @@
+{% extends '../layout.html' %}
+
+{% block content %}
+<div class="book-detail-container">
+  <div class="book-detail-card">
+    <div class="book-cover-large">
+      <img src="{{ book.coverImage }}" alt="{{ book.title }}">
+    </div>
+    <div class="book-detail-info">
+      <h2 class="book-detail-title">{{ book.title }}</h2>
+      
+      <div class="book-detail-meta">
+        <div class="meta-item">
+          <span class="meta-label"><i class="fas fa-user"></i> 저자</span>
+          <span class="meta-value">{{ book.author }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label"><i class="fas fa-building"></i> 출판사</span>
+          <span class="meta-value">{{ book.publisher }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label"><i class="fas fa-calendar-alt"></i> 출판년도</span>
+          <span class="meta-value">{{ book.publishedYear }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label"><i class="fas fa-barcode"></i> ISBN</span>
+          <span class="meta-value">{{ book.isbn }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label"><i class="fas fa-tag"></i> 카테고리</span>
+          <span class="meta-value">{{ book.category }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label"><i class="fas fa-cubes"></i> 수량</span>
+          <span class="meta-value">{{ book.quantity }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label"><i class="fas fa-exchange-alt"></i> 대출 가능</span>
+          <span class="meta-value availability-badge {% if book.available > 0 %}available{% else %}unavailable{% endif %}">
+            {{ book.available }}
+          </span>
+        </div>
+      </div>
+      
+      {% if book.description %}
+      <div class="book-description">
+        <h3>도서 설명</h3>
+        <p>{{ book.description }}</p>
+      </div>
+      {% endif %}
+      
+      <div class="book-detail-actions">
+        <a href="/books/{{ book._id }}/edit" class="btn primary-btn"><i class="fas fa-edit"></i> 수정</a>
+        <form action="/books/{{ book._id }}/delete" method="POST" class="inline-form" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+          <button type="submit" class="btn danger-btn"><i class="fas fa-trash-alt"></i> 삭제</button>
+        </form>
+        {% if book.available > 0 %}
+        <a href="/loans/new?bookId={{ book._id }}" class="btn success-btn"><i class="fas fa-exchange-alt"></i> 대출 등록</a>
+        {% endif %}
+        <a href="/books" class="btn outline-btn"><i class="fas fa-arrow-left"></i> 목록으로</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

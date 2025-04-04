@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-content">
+    <h2>도서 관리 시스템에 오신 것을 환영합니다</h2>
+    <p>MongoDB를 활용한 효율적인 도서 관리 솔루션</p>
+    <div class="hero-actions">
+      <a href="/books" class="btn primary-btn"><i class="fas fa-book-open"></i> 도서 목록 보기</a>
+      <a href="/books/new" class="btn secondary-btn"><i class="fas fa-plus-circle"></i> 새 도서 등록</a>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="feature-card">
+    <i class="fas fa-book"></i>
+    <h3>도서 관리</h3>
+    <p>도서 등록, 수정, 삭제 및 검색 기능을 제공합니다.</p>
+  </div>
+  <div class="feature-card">
+    <i class="fas fa-exchange-alt"></i>
+    <h3>대출 관리</h3>
+    <p>도서 대출 및 반납 처리를 효율적으로 관리합니다.</p>
+  </div>
+  <div class="feature-card">
+    <i class="fas fa-users"></i>
+    <h3>사용자 관리</h3>
+    <p>사용자 등록 및 권한 관리 기능을 제공합니다.</p>
+  </div>
+  <div class="feature-card">
+    <i class="fas fa-chart-bar"></i>
+    <h3>통계 및 보고서</h3>
+    <p>대출 현황 및 도서 통계를 확인할 수 있습니다.</p>
+  </div>
+</section>
+
+{% if recentBooks and recentBooks.length > 0 %}
+<section class="recent-books">
+  <h2 class="section-title">최근 추가된 도서</h2>
+  <div class="book-grid">
+    {% for book in recentBooks %}
+    <div class="book-card">
+      <div class="book-cover">
+        <img src="{{ book.coverImage }}" alt="{{ book.title }}">
+      </div>
+      <div class="book-info">
+        <h3 class="book-title">{{ book.title }}</h3>
+        <p class="book-author">{{ book.author }}</p>
+        <p class="book-category">{{ book.category }}</p>
+        <div class="book-status">
+          <span class="availability {% if book.available > 0 %}available{% else %}unavailable{% endif %}">
+            {% if book.available > 0 %}
+            <i class="fas fa-check-circle"></i> 대출 가능
+            {% else %}
+            <i class="fas fa-times-circle"></i> 대출 불가
+            {% endif %}
+          </span>
+        </div>
+        <a href="/books/{{ book._id }}" class="btn detail-btn">상세 정보</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="view-all">
+    <a href="/books" class="btn outline-btn">모든 도서 보기 <i class="fas fa-arrow-right"></i></a>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

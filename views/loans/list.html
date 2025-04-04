@@ -1,0 +1,74 @@
+{% extends '../layout.html' %}
+
+{% block content %}
+<div class="loan-list-container">
+  <div class="table-actions">
+    <a href="/loans/new" class="btn primary-btn"><i class="fas fa-plus"></i> 새 대출 등록</a>
+  </div>
+
+  {% if loans and loans.length > 0 %}
+  <div class="loan-table-container">
+    <table class="loan-table">
+      <thead>
+        <tr>
+          <th>도서</th>
+          <th>대출자</th>
+          <th>대출일</th>
+          <th>반납예정일</th>
+          <th>반납일</th>
+          <th>상태</th>
+          <th>관리</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for loan in loans %}
+        <tr class="{% if loan.status == 'overdue' %}overdue-row{% endif %}">
+          <td>
+            <a href="/books/{{ loan.book._id }}">{{ loan.book.title }}</a>
+          </td>
+          <td>
+            <a href="/users/{{ loan.user._id }}">{{ loan.user.name }}</a>
+          </td>
+          <td>{{ loan.loanDate | date('YYYY-MM-DD') }}</td>
+          <td>{{ loan.dueDate | date('YYYY-MM-DD') }}</td>
+          <td>{% if loan.returnDate %}{{ loan.returnDate | date('YYYY-MM-DD') }}{% else %}-{% endif %}</td>
+          <td>
+            <span class="status-badge loan-status-{{ loan.status }}">
+              {% if loan.status == 'borrowed' %}
+                대출 중
+              {% elif loan.status == 'returned' %}
+                반납 완료
+              {% elif loan.status == 'overdue' %}
+                연체
+              {% endif %}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <a href="/loans/{{ loan._id }}" class="btn icon-btn view-btn" title="상세 보기">
+              <i class="fas fa-eye"></i>
+            </a>
+            {% if loan.status == 'borrowed' or loan.status == 'overdue' %}
+            <form action="/loans/{{ loan._id }}/return" method="POST" class="inline-form">
+              <button type="submit" class="btn icon-btn return-btn" title="반납 처리">
+                <i class="fas fa-undo-alt"></i>
+              </button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">
+      <i class="fas fa-exchange-alt"></i>
+    </div>
+    <h3>대출 기록이 없습니다</h3>
+    <p>새로운 대출을 등록해주세요.</p>
+    <a href="/loans/new" class="btn primary-btn"><i class="fas fa-plus"></i> 새 대출 등록</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

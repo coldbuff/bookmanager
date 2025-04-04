@@ -1,0 +1,55 @@
+{% extends '../layout.html' %}
+
+{% block content %}
+<div class="loan-form-container">
+  <form action="/loans" method="POST" class="loan-form">
+    <div class="form-group">
+      <label for="bookId">도서 <span class="required">*</span></label>
+      <select id="bookId" name="bookId" required>
+        <option value="">도서 선택</option>
+        {% for book in books %}
+        <option value="{{ book._id }}" {% if bookId == book._id %}selected{% endif %}>
+          {{ book.title }} ({{ book.author }}) - 남은 수량: {{ book.available }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="userId">대출자 <span class="required">*</span></label>
+      <select id="userId" name="userId" required>
+        <option value="">대출자 선택</option>
+        {% for user in users %}
+        <option value="{{ user._id }}" {% if userId == user._id %}selected{% endif %}>
+          {{ user.name }} ({{ user.email }})
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="dueDate">반납 예정일 <span class="required">*</span></label>
+      <input type="date" id="dueDate" name="dueDate" required>
+      <script>
+        // 기본값으로 오늘로부터 14일 후 설정
+        document.addEventListener('DOMContentLoaded', function() {
+          const today = new Date();
+          const twoWeeksLater = new Date(today);
+          twoWeeksLater.setDate(today.getDate() + 14);
+          
+          const yyyy = twoWeeksLater.getFullYear();
+          const mm = String(twoWeeksLater.getMonth() + 1).padStart(2, '0');
+          const dd = String(twoWeeksLater.getDate()).padStart(2, '0');
+          
+          document.getElementById('dueDate').value = `${yyyy}-${mm}-${dd}`;
+        });
+      </script>
+    </div>
+    
+    <div class="form-actions">
+      <button type="submit" class="btn primary-btn"><i class="fas fa-save"></i> 대출 등록</button>
+      <a href="/loans" class="btn outline-btn"><i class="fas fa-times"></i> 취소</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

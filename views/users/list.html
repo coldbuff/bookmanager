@@ -1,0 +1,64 @@
+{% extends '../layout.html' %}
+
+{% block content %}
+<div class="user-list-container">
+  <div class="table-actions">
+    <a href="/users/register" class="btn primary-btn"><i class="fas fa-user-plus"></i> 새 사용자 등록</a>
+  </div>
+
+  {% if users and users.length > 0 %}
+  <div class="user-table-container">
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>이름</th>
+          <th>이메일</th>
+          <th>권한</th>
+          <th>가입일</th>
+          <th>마지막 로그인</th>
+          <th>상태</th>
+          <th>관리</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <span class="role-badge {% if user.role == 'admin' %}admin-role{% else %}user-role{% endif %}">
+              {% if user.role == 'admin' %}관리자{% else %}일반 사용자{% endif %}
+            </span>
+          </td>
+          <td>{{ user.joinDate | date('YYYY-MM-DD') }}</td>
+          <td>{{ user.lastLogin | date('YYYY-MM-DD HH:mm') }}</td>
+          <td>
+            <span class="status-badge {% if user.active %}active-status{% else %}inactive-status{% endif %}">
+              {% if user.active %}활성{% else %}비활성{% endif %}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <a href="/users/{{ user._id }}" class="btn icon-btn view-btn" title="상세 보기">
+              <i class="fas fa-eye"></i>
+            </a>
+            <a href="/users/{{ user._id }}/edit" class="btn icon-btn edit-btn" title="수정">
+              <i class="fas fa-edit"></i>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">
+      <i class="fas fa-users"></i>
+    </div>
+    <h3>등록된 사용자가 없습니다</h3>
+    <p>새로운 사용자를 등록해주세요.</p>
+    <a href="/users/register" class="btn primary-btn"><i class="fas fa-user-plus"></i> 새 사용자 등록</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

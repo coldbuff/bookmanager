@@ -1,0 +1,81 @@
+{% extends '../layout.html' %}
+
+{% block content %}
+<div class="book-list-container">
+  <div class="search-section">
+    <form action="/books/search" method="GET" class="search-form">
+      <div class="search-input-group">
+        <input type="text" name="query" placeholder="도서 검색..." value="{{ searchQuery }}" class="search-input">
+        <select name="type" class="search-type">
+          <option value="all" {% if searchType == 'all' %}selected{% endif %}>전체</option>
+          <option value="title" {% if searchType == 'title' %}selected{% endif %}>제목</option>
+          <option value="author" {% if searchType == 'author' %}selected{% endif %}>저자</option>
+          <option value="isbn" {% if searchType == 'isbn' %}selected{% endif %}>ISBN</option>
+        </select>
+        <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+      </div>
+    </form>
+    <a href="/books/new" class="btn primary-btn"><i class="fas fa-plus"></i> 새 도서 등록</a>
+  </div>
+
+  {% if books and books.length > 0 %}
+  <div class="book-table-container">
+    <table class="book-table">
+      <thead>
+        <tr>
+          <th>제목</th>
+          <th>저자</th>
+          <th>출판사</th>
+          <th>카테고리</th>
+          <th>ISBN</th>
+          <th>수량</th>
+          <th>대출 가능</th>
+          <th>관리</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for book in books %}
+        <tr>
+          <td class="book-title-cell">
+            <a href="/books/{{ book._id }}">{{ book.title }}</a>
+          </td>
+          <td>{{ book.author }}</td>
+          <td>{{ book.publisher }}</td>
+          <td>{{ book.category }}</td>
+          <td>{{ book.isbn }}</td>
+          <td>{{ book.quantity }}</td>
+          <td class="availability-cell">
+            <span class="availability-badge {% if book.available > 0 %}available{% else %}unavailable{% endif %}">
+              {{ book.available }}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <a href="/books/{{ book._id }}" class="btn icon-btn view-btn" title="상세 보기">
+              <i class="fas fa-eye"></i>
+            </a>
+            <a href="/books/{{ book._id }}/edit" class="btn icon-btn edit-btn" title="수정">
+              <i class="fas fa-edit"></i>
+            </a>
+            <form action="/books/{{ book._id }}/delete" method="POST" class="inline-form" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+              <button type="submit" class="btn icon-btn delete-btn" title="삭제">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">
+      <i class="fas fa-book"></i>
+    </div>
+    <h3>도서가 없습니다</h3>
+    <p>검색 결과가 없거나 등록된 도서가 없습니다.</p>
+    <a href="/books/new" class="btn primary-btn"><i class="fas fa-plus"></i> 새 도서 등록</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }} - 도서 관리 시스템</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="dark-mode">
+  <div class="container">
+    <header class="main-header">
+      <div class="logo">
+        <a href="/">
+          <i class="fas fa-book"></i>
+          <span>도서 관리 시스템</span>
+        </a>
+      </div>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="/"><i class="fas fa-home"></i> 홈</a></li>
+          <li><a href="/books"><i class="fas fa-book-open"></i> 도서 목록</a></li>
+          <li><a href="/loans"><i class="fas fa-exchange-alt"></i> 대출 관리</a></li>
+          <li><a href="/users"><i class="fas fa-users"></i> 사용자 관리</a></li>
+        </ul>
+      </nav>
+      <div class="user-menu">
+        <!-- 사용자 정보 디버깅 -->
+        <!-- 사용자 정보: {{ user | dump }} -->
+        
+        {% if user and user.name %}
+        <div class="logged-in-user">
+          <span class="user-name"><i class="fas fa-user"></i> {{ user.name }}님, 환영합니다!</span>
+          <a href="/users/logout" class="btn logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>
+        </div>
+        {% else %}
+        <a href="/users/login" class="btn login-btn"><i class="fas fa-sign-in-alt"></i> 로그인</a>
+        <a href="/users/register" class="btn register-btn"><i class="fas fa-user-plus"></i> 회원가입</a>
+        {% endif %}
+      </div>
+    </header>
+
+    <main class="content">
+      {% if error %}
+      <div class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>{{ error }}</span>
+      </div>
+      {% endif %}
+
+      {% if success %}
+      <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i>
+        <span>{{ success }}</span>
+      </div>
+      {% endif %}
+
+      <h1 class="page-title">{{ title }}</h1>
+      
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="main-footer">
+      <div class="footer-content">
+        <p>&copy; 2025 도서 관리 시스템. All rights reserved.</p>
+        <p>MongoDB를 활용한 프로젝트</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

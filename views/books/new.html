@@ -1,0 +1,76 @@
+{% extends '../layout.html' %}
+
+{% block content %}
+<div class="book-form-container">
+  <form action="/books" method="POST" class="book-form">
+    <div class="form-group">
+      <label for="title">도서 제목 <span class="required">*</span></label>
+      <input type="text" id="title" name="title" required value="{{ book.title }}">
+    </div>
+    
+    <div class="form-group">
+      <label for="author">저자 <span class="required">*</span></label>
+      <input type="text" id="author" name="author" required value="{{ book.author }}">
+    </div>
+    
+    <div class="form-group">
+      <label for="publisher">출판사 <span class="required">*</span></label>
+      <input type="text" id="publisher" name="publisher" required value="{{ book.publisher }}">
+    </div>
+    
+    <div class="form-group">
+      <label for="publishedYear">출판년도 <span class="required">*</span></label>
+      <input type="number" id="publishedYear" name="publishedYear" required value="{{ book.publishedYear }}">
+    </div>
+    
+    <div class="form-group">
+      <label for="isbn">ISBN <span class="required">*</span></label>
+      <input type="text" id="isbn" name="isbn" required value="{{ book.isbn }}">
+    </div>
+    
+    <div class="form-group">
+      <label for="category">카테고리 <span class="required">*</span></label>
+      <select id="category" name="category" required>
+        <option value="">카테고리 선택</option>
+        <option value="소설" {% if book.category == '소설' %}selected{% endif %}>소설</option>
+        <option value="시/에세이" {% if book.category == '시/에세이' %}selected{% endif %}>시/에세이</option>
+        <option value="인문학" {% if book.category == '인문학' %}selected{% endif %}>인문학</option>
+        <option value="사회과학" {% if book.category == '사회과학' %}selected{% endif %}>사회과학</option>
+        <option value="역사" {% if book.category == '역사' %}selected{% endif %}>역사</option>
+        <option value="과학" {% if book.category == '과학' %}selected{% endif %}>과학</option>
+        <option value="기술/공학" {% if book.category == '기술/공학' %}selected{% endif %}>기술/공학</option>
+        <option value="컴퓨터/IT" {% if book.category == '컴퓨터/IT' %}selected{% endif %}>컴퓨터/IT</option>
+        <option value="예술/대중문화" {% if book.category == '예술/대중문화' %}selected{% endif %}>예술/대중문화</option>
+        <option value="자기계발" {% if book.category == '자기계발' %}selected{% endif %}>자기계발</option>
+        <option value="건강" {% if book.category == '건강' %}selected{% endif %}>건강</option>
+        <option value="여행" {% if book.category == '여행' %}selected{% endif %}>여행</option>
+        <option value="요리" {% if book.category == '요리' %}selected{% endif %}>요리</option>
+        <option value="어린이" {% if book.category == '어린이' %}selected{% endif %}>어린이</option>
+        <option value="청소년" {% if book.category == '청소년' %}selected{% endif %}>청소년</option>
+        <option value="기타" {% if book.category == '기타' %}selected{% endif %}>기타</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="quantity">수량 <span class="required">*</span></label>
+      <input type="number" id="quantity" name="quantity" min="1" required value="{% if book.quantity %}{{ book.quantity }}{% else %}1{% endif %}">
+    </div>
+    
+    <div class="form-group">
+      <label for="description">도서 설명</label>
+      <textarea id="description" name="description" rows="5">{{ book.description }}</textarea>
+    </div>
+    
+    <div class="form-group">
+      <label for="coverImage">표지 이미지 URL</label>
+      <input type="url" id="coverImage" name="coverImage" value="{{ book.coverImage }}">
+      <small>URL을 입력하지 않으면 기본 이미지가 사용됩니다.</small>
+    </div>
+    
+    <div class="form-actions">
+      <button type="submit" class="btn primary-btn"><i class="fas fa-save"></i> 저장</button>
+      <a href="/books" class="btn outline-btn"><i class="fas fa-times"></i> 취소</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
