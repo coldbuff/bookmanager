@@ -3,9 +3,6 @@
 {% block content %}
 <div class="book-detail-container">
   <div class="book-detail-card">
-    <div class="book-cover-large">
-      <img src="{{ book.coverImage }}" alt="{{ book.title }}">
-    </div>
     <div class="book-detail-info">
       <h2 class="book-detail-title">{{ book.title }}</h2>
       
@@ -31,13 +28,17 @@
           <span class="meta-value">{{ book.category }}</span>
         </div>
         <div class="meta-item">
-          <span class="meta-label"><i class="fas fa-cubes"></i> 수량</span>
-          <span class="meta-value">{{ book.quantity }}</span>
+          <span class="meta-label"><i class="fas fa-cubes"></i> 총 수량</span>
+          <span class="meta-value">{{ book.quantity }} 권</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label"><i class="fas fa-book-reader"></i> 대출 중</span>
+          <span class="meta-value">{{ book.quantity - book.available }} 권</span>
         </div>
         <div class="meta-item">
           <span class="meta-label"><i class="fas fa-exchange-alt"></i> 대출 가능</span>
           <span class="meta-value availability-badge {% if book.available > 0 %}available{% else %}unavailable{% endif %}">
-            {{ book.available }}
+            {{ book.available }} 권
           </span>
         </div>
       </div>
@@ -50,16 +51,87 @@
       {% endif %}
       
       <div class="book-detail-actions">
-        <a href="/books/{{ book._id }}/edit" class="btn primary-btn"><i class="fas fa-edit"></i> 수정</a>
+        <a href="/books/{{ book._id }}/edit" class="btn icon-btn edit-btn" style="width: auto; padding: 0.5rem 1rem; border-radius: 4px;"><i class="fas fa-edit"></i> 수정</a>
         <form action="/books/{{ book._id }}/delete" method="POST" class="inline-form" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-          <button type="submit" class="btn danger-btn"><i class="fas fa-trash-alt"></i> 삭제</button>
+          <button type="submit" class="btn icon-btn delete-btn" style="width: auto; padding: 0.5rem 1rem; border-radius: 4px;"><i class="fas fa-trash-alt"></i> 삭제</button>
         </form>
         {% if book.available > 0 %}
         <a href="/loans/new?bookId={{ book._id }}" class="btn success-btn"><i class="fas fa-exchange-alt"></i> 대출 등록</a>
         {% endif %}
-        <a href="/books" class="btn outline-btn"><i class="fas fa-arrow-left"></i> 목록으로</a>
+        <a href="/books" class="btn icon-btn" style="width: auto; padding: 0.5rem 1rem; border-radius: 4px; background-color: #121212; color: #bb86fc; border: 1px solid #bb86fc;"><i class="fas fa-arrow-left"></i> 목록으로</a>
       </div>
     </div>
   </div>
 </div>
+
+<!-- 대출 이력 섹션 -->
+{% if loans and loans.length > 0 %}
+<div class="book-loan-history">
+  <h2 class="section-title">대출 이력</h2>
+  
+  <!-- 대출 통계 -->
+  <div class="loan-stats">
+    <div class="stat-item">
+      <span class="stat-label">총 대출 횟수</span>
+      <span class="stat-value">{{ loanStats.total }}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">현재 대출 중</span>
+      <span class="stat-value">{{ loanStats.borrowed }}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">연체 중</span>
+      <span class="stat-value">{{ loanStats.overdue }}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">반납 완료</span>
+      <span class="stat-value">{{ loanStats.returned }}</span>
+    </div>
+  </div>
+  
+  <!-- 대출 목록 테이블 -->
+  <div class="loan-table-container">
+    <table class="loan-table">
+      <thead>
+        <tr>
+          <th>대출자</th>
+          <th>대출일</th>
+          <th>반납예정일</th>
+          <th>반납일</th>
+          <th>상태</th>
+          <th>관리</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for loan in loans %}
+        <tr class="{% if loan.status == 'overdue' %}overdue-row{% elif loan.status == 'borrowed' %}borrowed-row{% endif %}">
+          <td>
+            <a href="/users/{{ loan.user._id }}">{{ loan.user.name }}</a>
+          </td>
+          <td>{{ loan.loanDate | date('YYYY-MM-DD') }}</td>
+          <td>{{ loan.dueDate | date('YYYY-MM-DD') }}</td>
+          <td>{% if loan.returnDate %}{{ loan.returnDate | date('YYYY-MM-DD') }}{% else %}미반납{% endif %}</td>
+          <td>
+            <span class="status-badge loan-status-{{ loan.status }}">
+              {% if loan.status == 'borrowed' %}
+                대출 중
+              {% elif loan.status == 'returned' %}
+                반납 완료
+              {% elif loan.status == 'overdue' %}
+                연체 중
+              {% endif %}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <a href="/loans/{{ loan._id }}" class="btn icon-btn view-btn" title="상세 보기">
+              <i class="fas fa-eye"></i>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
 {% endblock %}

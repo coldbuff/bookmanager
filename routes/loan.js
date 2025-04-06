@@ -114,7 +114,13 @@ router.get('/:id', async (req, res, next) => {
       return res.status(404).render('error', { message: '대출 정보를 찾을 수 없습니다.' });
     }
     
-    res.render('loans/detail', { title: '대출 상세 정보', loan });
+    // 현재 날짜 정보 추가
+    const currentDate = new Date();
+    res.render('loans/detail', { 
+      title: '대출 상세 정보', 
+      loan,
+      currentDate
+    });
   } catch (error) {
     console.error(error);
     next(error);

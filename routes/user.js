@@ -147,7 +147,7 @@ router.get("/logout", (req, res) => {
     }
 
     // 쿠키 삭제
-    res.clearCookie("connect.sid", { path: "/" });
+    res.clearCookie("bookmanager.sid", { path: "/" });
     console.log(`사용자 ${userName} 로그아웃 성공`);
 
     return res.redirect("/");

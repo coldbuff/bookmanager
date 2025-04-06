@@ -37,10 +37,6 @@ const bookSchema = new Schema({
     type: String,
     trim: true,
   },
-  coverImage: {
-    type: String,
-    default: '/images/default-book-cover.jpg',
-  },
   quantity: {
     type: Number,
     required: true,

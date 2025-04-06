@@ -60,7 +60,27 @@ router.get('/:id', async (req, res, next) => {
     if (!book) {
       return res.status(404).render('error', { message: '도서를 찾을 수 없습니다.' });
     }
-    res.render('books/detail', { title: book.title, book });
+    
+    // 해당 도서의 대출 이력 조회
+    const Loan = require('../schemas/loan');
+    const loans = await Loan.find({ book: req.params.id })
+      .populate('user')
+      .sort({ loanDate: -1 });
+      
+    // 대출 상태별 통계 계산
+    const loanStats = {
+      borrowed: loans.filter(loan => loan.status === 'borrowed').length,
+      returned: loans.filter(loan => loan.status === 'returned').length,
+      overdue: loans.filter(loan => loan.status === 'overdue').length,
+      total: loans.length
+    };
+    
+    res.render('books/detail', { 
+      title: book.title, 
+      book,
+      loans,
+      loanStats
+    });
   } catch (error) {
     console.error(error);
     next(error);
@@ -96,6 +116,17 @@ router.post('/:id', async (req, res, next) => {
       });
     }
     
+    // 현재 도서 정보 가져오기
+    const currentBook = await Book.findById(req.params.id);
+    if (!currentBook) {
+      return res.status(404).render('error', { message: '도서를 찾을 수 없습니다.' });
+    }
+    
+    // 대출 가능 수량 계산
+    // 새로운 available = 새 quantity - (이전 quantity - 이전 available)
+    const borrowedCount = currentBook.quantity - currentBook.available;
+    const newAvailable = Math.max(0, parseInt(quantity) - borrowedCount);
+    
     // 도서 정보 업데이트
     const book = await Book.findByIdAndUpdate(req.params.id, {
       title,
@@ -106,6 +137,7 @@ router.post('/:id', async (req, res, next) => {
       category,
       description,
       quantity,
+      available: newAvailable,
       updatedAt: Date.now()
     }, { new: true });
     

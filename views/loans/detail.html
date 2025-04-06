@@ -6,11 +6,11 @@
     <div class="loan-header">
       <h2>대출 상세 정보</h2>
       <span class="status-badge loan-status-{{ loan.status }}">
-        {% if loan.status === 'borrowed' %}
+        {% if loan.status == 'borrowed' %}
           대출 중
-        {% elif loan.status === 'returned' %}
+        {% elif loan.status == 'returned' %}
           반납 완료
-        {% elif loan.status === 'overdue' %}
+        {% elif loan.status == 'overdue' %}
           연체
         {% endif %}
       </span>
@@ -19,9 +19,6 @@
     <div class="loan-info-section">
       <div class="loan-book-info">
         <h3>도서 정보</h3>
-        <div class="book-cover-medium">
-          <img src="{{ loan.book.coverImage }}" alt="{{ loan.book.title }}">
-        </div>
         <div class="book-info">
           <h4>{{ loan.book.title }}</h4>
           <p>저자: {{ loan.book.author }}</p>
@@ -50,9 +47,9 @@
       </div>
       <div class="date-item">
         <span class="date-label"><i class="fas fa-calendar-check"></i> 반납일</span>
-        <span class="date-value">{{ loan.returnDate ? (loan.returnDate | date('YYYY-MM-DD')) : '미반납' }}</span>
+        <span class="date-value">{% if loan.returnDate %}{{ loan.returnDate | date('YYYY-MM-DD') }}{% else %}미반납{% endif %}</span>
       </div>
-      {% if loan.status === 'overdue' and loan.fine > 0 %}
+      {% if loan.status == 'overdue' and loan.fine > 0 %}
       <div class="date-item fine-item">
         <span class="date-label"><i class="fas fa-money-bill-wave"></i> 연체료</span>
         <span class="date-value">{{ loan.fine }}원</span>
@@ -61,13 +58,13 @@
     </div>
     
     <div class="loan-actions">
-      {% if loan.status === 'borrowed' or loan.status === 'overdue' %}
+      {% if loan.status == 'borrowed' or loan.status == 'overdue' %}
       <form action="/loans/{{ loan._id }}/return" method="POST" class="inline-form">
-        <button type="submit" class="btn primary-btn"><i class="fas fa-undo-alt"></i> 반납 처리</button>
+        <button type="submit" class="btn icon-btn" style="width: auto; padding: 0.5rem 1rem; border-radius: 4px; background-color: #6200ee; color: white;"><i class="fas fa-undo-alt"></i> 반납 처리</button>
       </form>
       {% endif %}
       
-      {% if loan.status === 'borrowed' and loan.dueDate < now %}
+      {% if loan.status == 'borrowed' and loan.dueDate < currentDate %}
       <form action="/loans/{{ loan._id }}/overdue" method="POST" class="inline-form">
         <div class="fine-input-group">
           <input type="number" name="fine" placeholder="연체료" min="0" value="1000">
@@ -76,7 +73,7 @@
       </form>
       {% endif %}
       
-      <a href="/loans" class="btn outline-btn"><i class="fas fa-arrow-left"></i> 목록으로</a>
+      <a href="/loans" class="btn icon-btn" style="width: auto; padding: 0.5rem 1rem; border-radius: 4px; background-color: #121212; color: #bb86fc; border: 1px solid #bb86fc;"><i class="fas fa-arrow-left"></i> 목록으로</a>
     </div>
   </div>
 </div>

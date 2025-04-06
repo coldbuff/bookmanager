@@ -214,9 +214,9 @@ a:hover {
 
 .icon-btn {
   padding: 0.35rem;
-  border-radius: 50%;
-  width: 2rem;
-  height: 2rem;
+  border-radius: 4px;
+  width: 2.2rem;
+  height: 2.2rem;
 }
 
 .icon-btn i {
@@ -719,6 +719,69 @@ a:hover {
 .book-detail-container {
   display: flex;
   justify-content: center;
+  margin-bottom: 2rem;
+}
+
+/* 도서 대출 이력 섹션 */
+.book-loan-history {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--accent-secondary);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
+}
+
+.loan-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  background-color: var(--bg-tertiary);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.stat-item {
+  flex: 1;
+  min-width: 120px;
+  padding: 0.75rem;
+  background-color: var(--bg-secondary);
+  border-radius: 6px;
+  text-align: center;
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--accent-secondary);
+}
+
+.borrowed-row {
+  background-color: rgba(98, 0, 238, 0.1);
+}
+
+.overdue-row {
+  background-color: rgba(207, 102, 121, 0.1);
 }
 
 .book-detail-card {
